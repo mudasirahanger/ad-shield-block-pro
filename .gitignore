@@ -1,0 +1,4 @@
+*.pem
+dist/
+release/
+.DS_Store

@@ -1,0 +1,56 @@
+[
+ {
+  "id": 1,
+  "priority": 1,
+  "action": {
+   "type": "modifyHeaders",
+   "requestHeaders": [
+    {
+     "header": "DNT",
+     "operation": "set",
+     "value": "1"
+    },
+    {
+     "header": "Sec-GPC",
+     "operation": "set",
+     "value": "1"
+    }
+   ]
+  },
+  "condition": {
+   "resourceTypes": [
+    "main_frame",
+    "sub_frame",
+    "xmlhttprequest",
+    "script",
+    "image",
+    "ping",
+    "other"
+   ]
+  }
+ },
+ {
+  "id": 2,
+  "priority": 1,
+  "action": {
+   "type": "modifyHeaders",
+   "requestHeaders": [
+    {
+     "header": "Referer",
+     "operation": "remove"
+    }
+   ]
+  },
+  "condition": {
+   "domainType": "thirdParty",
+   "resourceTypes": [
+    "script",
+    "image",
+    "xmlhttprequest",
+    "sub_frame",
+    "ping",
+    "other"
+   ]
+  }
+ }
+]

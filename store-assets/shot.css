@@ -1,0 +1,11 @@
+*{box-sizing:border-box}body{margin:0;width:1280px;height:800px;font-family:-apple-system,system-ui,sans-serif;background:#f1f3f4;color:#202124;overflow:hidden}
+.bar{height:56px;background:#fff;border-bottom:1px solid #dadce0;display:flex;align-items:center;padding:0 20px;gap:14px}
+.url{flex:1;background:#f1f3f4;border-radius:18px;padding:8px 16px;color:#5f6368;font-size:14px}
+.ext{position:relative;width:28px;height:28px}.ext img{width:28px;height:28px}
+.badge{position:absolute;right:-8px;bottom:-6px;background:#1a73e8;color:#fff;font:700 10px sans-serif;padding:1px 4px;border-radius:6px}
+.page{padding:28px 60px;position:relative}
+h1{font-size:34px;margin:0 0 8px}.meta{color:#5f6368;margin-bottom:18px}
+.txt{width:560px}.line{height:12px;background:#dadce0;border-radius:6px;margin:12px 0}
+.ad{background:repeating-linear-gradient(45deg,#fde68a,#fde68a 12px,#fcd34d 12px,#fcd34d 24px);border:2px dashed #b45309;color:#7c2d12;font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:6px}
+.label{position:absolute;bottom:28px;left:60px;font-weight:700;font-size:15px;padding:6px 14px;border-radius:14px;color:#fff}
+.hl{font-size:30px;font-weight:700;text-align:center;margin:10px 0 4px}
