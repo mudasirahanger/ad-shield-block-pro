@@ -91,6 +91,22 @@ function patternRules() {
   }));
 }
 
+// Strips well-known tracking query parameters from page loads (utm_*, fbclid, gclid, ...).
+const TRACKING_PARAMS = [
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id', 'fbclid', 'gclid',
+  'gbraid', 'wbraid', 'msclkid', 'yclid', 'dclid', 'twclid', 'ttclid', 'igshid', 'mc_eid', 'mc_cid',
+  '_hsenc', '_hsmi', 'mkt_tok', 'vero_id', 'oly_enc_id', 'oly_anon_id'
+];
+const params = [{
+  id: 1,
+  priority: 1,
+  action: { type: 'redirect', redirect: { transform: { queryTransform: { removeParams: TRACKING_PARAMS } } } },
+  condition: {
+    regexFilter: '[?&](utm_[a-z]+|fbclid|gclid|gbraid|wbraid|msclkid|yclid|dclid|twclid|ttclid|igshid|mc_eid|mc_cid|_hsenc|_hsmi|mkt_tok)=',
+    resourceTypes: ['main_frame']
+  }
+}];
+
 const privacy = [
   {
     id: 1,
@@ -116,6 +132,7 @@ const privacy = [
 const out = path.join(__dirname, '..', 'rules');
 fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.join(out, 'ads.json'), JSON.stringify(blockRules(ADS), null, 1));
+fs.writeFileSync(path.join(out, 'params.json'), JSON.stringify(params, null, 1));
 fs.writeFileSync(path.join(out, 'patterns.json'), JSON.stringify(patternRules(), null, 1));
 fs.writeFileSync(path.join(out, 'trackers.json'), JSON.stringify(blockRules(TRACKERS), null, 1));
 fs.writeFileSync(path.join(out, 'privacy.json'), JSON.stringify(privacy, null, 1));

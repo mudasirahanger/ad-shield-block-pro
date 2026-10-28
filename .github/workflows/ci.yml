@@ -1,0 +1,27 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Rules are up to date
+        run: |
+          node tools/build-rules.js
+          git diff --exit-code rules/
+      - name: JSON is valid
+        run: |
+          for f in manifest.json rules/*.json; do node -e "JSON.parse(require('fs').readFileSync('$f'))" || exit 1; done
+      - name: JavaScript syntax
+        run: |
+          for f in background.js content.js popup/popup.js tools/build-rules.js; do node --check "$f" || exit 1; done
+      - name: Manifest references exist
+        run: |
+          node -e "
+          const fs=require('fs');const m=JSON.parse(fs.readFileSync('manifest.json'));
+          const files=[m.background.service_worker,m.action.default_popup,...Object.values(m.icons),...m.declarative_net_request.rule_resources.map(r=>r.path),...m.content_scripts.flatMap(c=>c.js||[])];
+          const missing=files.filter(f=>!fs.existsSync(f));
+          if(missing.length){console.error('Missing:',missing);process.exit(1)}"

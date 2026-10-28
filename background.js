@@ -1,4 +1,4 @@
-const RULESETS = ['ads', 'trackers', 'patterns', 'privacy'];
+const RULESETS = ['ads', 'trackers', 'patterns', 'params', 'privacy'];
 const ALLOW_RULE_BASE = 1000;
 
 // Show how many requests were blocked on each tab as the toolbar badge.
@@ -39,8 +39,8 @@ async function syncAllowlist(allowlist) {
 
 chrome.runtime.onInstalled.addListener(async () => {
   await init();
-  const { enabled = true, allowlist = [] } = await chrome.storage.local.get(['enabled', 'allowlist']);
-  await chrome.storage.local.set({ enabled, allowlist });
+  const { enabled = true, allowlist = [], hideCookieBanners = true } = await chrome.storage.local.get(['enabled', 'allowlist', 'hideCookieBanners']);
+  await chrome.storage.local.set({ enabled, allowlist, hideCookieBanners });
   await applyEnabled(enabled);
   await syncAllowlist(allowlist);
 });

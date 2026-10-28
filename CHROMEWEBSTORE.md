@@ -16,6 +16,8 @@ Ad Shield Block Pro blocks ads and third-party trackers on the websites you visi
 
 WHAT IT DOES
 Blocks requests to well-known ad networks and tracking services.
+Removes tracking parameters (such as utm_source and fbclid) from the links you open.
+Hides common cookie-consent banners (you can turn this off in the popup).
 Hides empty ad boxes that would otherwise be left on the page.
 Tells websites not to track you by sending the Do Not Track and Global Privacy Control signals.
 Stops other websites from seeing which page you came from when a page loads third-party content.
@@ -27,7 +29,7 @@ HOW TO USE IT
 3. Use the switch at the top of the popup to turn protection off or on for every site.
 
 PRIVACY
-Ad Shield Block Pro does not collect, store, or send any of your data. It has no accounts and no analytics. Your settings (the on/off switch and the sites you paused) stay in your browser.
+Ad Shield Block Pro does not collect, store, or send any of your data. It has no accounts and no analytics. Your settings (the on/off switch, the cookie-banner option and the sites you paused) stay in your browser.
 
 LIMITATIONS
 Ad Shield Block Pro blocks ads and trackers that come from other companies' servers. Ads served from a website's own servers, such as video ads on some streaming sites, may still appear.
@@ -71,7 +73,7 @@ The icon is a simple generated placeholder (white cross on blue). Replace it wit
 | declarativeNetRequest | permissions | Blocks requests to known ad and tracker domains, adds the Do Not Track and Global Privacy Control headers, removes the Referer header from third-party requests, and shows the per-tab blocked count on the toolbar icon. Blocking is done by the browser from fixed rules bundled with the extension; the extension never reads page traffic. |
 | storage | permissions | Saves the user's on/off setting and the list of sites they chose to pause, locally in the browser. |
 | `<all_urls>` | host_permissions | Ads and trackers appear on every website, so the blocking rules and header changes must apply to requests on any site. Also lets the popup show which site is currently open and lets the "Pause on this site" button work on any site. No page content is read or transmitted. |
-| Content script on `http://*/*` and `https://*/*` | content_scripts | Hides empty ad containers on every page, and restores them on sites the user has paused. |
+| Content script on `http://*/*` and `https://*/*` | content_scripts | Hides empty ad containers and (optionally) cookie-consent banners on every page, except on sites the user has paused. |
 
 ## Privacy & Data Use
 
@@ -109,7 +111,7 @@ TODO: host the text below at a public URL (GitHub Pages, your website, or a publ
 >
 > Ad Shield Block Pro does not collect, store, transmit, sell, or share any personal information or browsing data.
 >
-> **What the extension stores:** your on/off setting and the list of website names you chose to pause. This is kept only in your browser's local extension storage on your device and is never sent anywhere. Uninstalling the extension deletes it.
+> **What the extension stores:** your on/off setting, your cookie-banner option and the list of website names you chose to pause. This is kept only in your browser's local extension storage on your device and is never sent anywhere. Uninstalling the extension deletes it.
 >
 > **What the extension does with web traffic:** it uses fixed filtering rules shipped inside the extension to block requests to advertising and tracking domains and to add "Do Not Track" and "Global Privacy Control" headers to your outgoing requests. It does not read, record, or transmit the pages you visit or the requests you make.
 >
@@ -142,6 +144,7 @@ TODO
 
 | Version | Date | Changes | Status |
 |---------|------|---------|--------|
+| 1.1 | 2026-10-28 | Added tracking-parameter stripping, cookie-banner hiding (toggle in popup), open-source project files and CI. | Draft |
 | 1.0 | 2026-10-28 | Initial release: ad and tracker blocking, Do Not Track / Global Privacy Control signals, Referer stripping for third-party requests, ad-slot hiding, global switch and per-site pause. | Draft |
 
 ## Review Notes

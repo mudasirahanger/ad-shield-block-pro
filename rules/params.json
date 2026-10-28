@@ -1,0 +1,47 @@
+[
+ {
+  "id": 1,
+  "priority": 1,
+  "action": {
+   "type": "redirect",
+   "redirect": {
+    "transform": {
+     "queryTransform": {
+      "removeParams": [
+       "utm_source",
+       "utm_medium",
+       "utm_campaign",
+       "utm_term",
+       "utm_content",
+       "utm_id",
+       "fbclid",
+       "gclid",
+       "gbraid",
+       "wbraid",
+       "msclkid",
+       "yclid",
+       "dclid",
+       "twclid",
+       "ttclid",
+       "igshid",
+       "mc_eid",
+       "mc_cid",
+       "_hsenc",
+       "_hsmi",
+       "mkt_tok",
+       "vero_id",
+       "oly_enc_id",
+       "oly_anon_id"
+      ]
+     }
+    }
+   }
+  },
+  "condition": {
+   "regexFilter": "[?&](utm_[a-z]+|fbclid|gclid|gbraid|wbraid|msclkid|yclid|dclid|twclid|ttclid|igshid|mc_eid|mc_cid|_hsenc|_hsmi|mkt_tok)=",
+   "resourceTypes": [
+    "main_frame"
+   ]
+  }
+ }
+]

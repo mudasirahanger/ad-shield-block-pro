@@ -2,12 +2,14 @@ const globalToggle = document.getElementById('global');
 const statusEl = document.getElementById('status');
 const hostEl = document.getElementById('host');
 const pauseBtn = document.getElementById('pause');
+const cookiesBox = document.getElementById('cookies');
 
 let hostname = '';
 
 async function render() {
-  const { enabled = true, allowlist = [] } = await chrome.storage.local.get(['enabled', 'allowlist']);
+  const { enabled = true, allowlist = [], hideCookieBanners = true } = await chrome.storage.local.get(['enabled', 'allowlist', 'hideCookieBanners']);
   globalToggle.checked = enabled;
+  cookiesBox.checked = hideCookieBanners;
   const paused = allowlist.includes(hostname);
   statusEl.textContent = !enabled ? 'Protection is off' : paused ? 'Paused on this site' : 'Protection is on';
   pauseBtn.disabled = !enabled || !hostname;
@@ -30,6 +32,12 @@ async function init() {
 globalToggle.addEventListener('change', async () => {
   await chrome.storage.local.set({ enabled: globalToggle.checked });
   await render();
+});
+
+cookiesBox.addEventListener('change', async () => {
+  await chrome.storage.local.set({ hideCookieBanners: cookiesBox.checked });
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (tab?.id) await chrome.tabs.reload(tab.id);
 });
 
 pauseBtn.addEventListener('click', async () => {
