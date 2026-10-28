@@ -13,6 +13,14 @@ Version 1.0 · Developer: Mudasir Ahanger
 - **Cosmetic filtering** – hides empty ad containers left behind after blocking (`content.css`).
 - **Popup controls** – global on/off switch and per-site "Pause on this site". The toolbar badge shows how many requests were blocked on the current tab.
 
+## Screenshots
+
+| Popup (real capture, dark theme) | Page with ads vs. protected |
+|---|---|
+| ![Popup](store-assets/popup-real.png) | ![Without protection](store-assets/screenshot-1.png) ![With protection](store-assets/screenshot-2.png) |
+
+The page screenshots are illustrative mockups; the popup is captured from the running extension.
+
 ## Install (unpacked)
 
 1. Open `chrome://extensions`.
