@@ -17,6 +17,7 @@ cd ad-shield-block-pro
 
 - **Add an ad or tracker domain:** add it to `ADS_RAW` or `TRACKERS_RAW` in `tools/build-rules.js`, run `node tools/build-rules.js`, and commit both the script and the regenerated `rules/*.json`.
 - **Report a broken site:** open an issue using the *Site broke* template with the URL and what stopped working. Most breakage is fixed by removing one rule.
+- **Fix Facebook ad detection:** see `facebook.js`; test against a real feed and describe what you saw.
 - **Add a cookie-banner or ad-slot selector:** edit `AD_SELECTORS` / `COOKIE_SELECTORS` in `content.js`.
 
 ## Pull request checklist

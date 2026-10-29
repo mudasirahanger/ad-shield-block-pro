@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/mudasirahanger/ad-shield-block-pro/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue"></a>
   <img alt="Manifest" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1-brightgreen">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.2-brightgreen">
   <img alt="Privacy" src="https://img.shields.io/badge/data%20collected-none-success">
   <img alt="Open source" src="https://img.shields.io/badge/open%20source-%E2%9D%A4-red">
   <a href="CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-orange"></a>
@@ -36,6 +36,7 @@
 | 🍪 **Cookie-banner hiding** | Hides common cookie-consent pop-ups (OneTrust, Cookiebot, Didomi, Quantcast…). Toggle in the popup. |
 | 🛡️ **Privacy signals** | Sends *Do Not Track* and *Global Privacy Control* on every request. |
 | 🙈 **Referer stripping** | Third-party requests no longer learn which page you came from. |
+| 📘 **Facebook ads** | Hides "Sponsored" posts in the feed and the sponsored box in the right column on facebook.com. |
 | 🧹 **Ad-slot cleanup** | Hides the empty boxes ads leave behind. |
 | ⏸️ **Per-site pause** | One click to turn protection off for a site that breaks, one click to turn it back on. |
 | 🔢 **Live counter** | The toolbar badge shows how many requests were blocked on the current tab. |
@@ -88,6 +89,7 @@ Blocking uses Chrome's `declarativeNetRequest` engine: rules are compiled by the
 | `manifest.json` | Extension manifest (Manifest V3) |
 | `background.js` | Service worker: toggles rulesets, syncs the per-site allowlist, sets up the badge |
 | `content.js` | Cosmetic filtering (ad slots, cookie banners); skipped on paused sites |
+| `facebook.js` | Hides sponsored posts and sidebar ads on facebook.com |
 | `popup/` | Toolbar popup UI |
 | `rules/` | Generated rulesets: `ads`, `trackers`, `patterns`, `params`, `privacy` |
 | `tools/build-rules.js` | **Source of truth** for the block lists; regenerates `rules/*.json` |
@@ -108,11 +110,13 @@ Ideas open for contributors:
 - [ ] Per-tab blocked-request breakdown in the popup
 - [ ] Custom user rules and domain block/allow list
 - [ ] Localisation (Hindi, Urdu, Arabic, Spanish…)
+- [ ] Sponsored-content filtering for Instagram, YouTube, X and LinkedIn
 - [ ] Firefox port
 
 ## Known limitations
 
 - Rules are domain/URL based. Ads served from a site's own domain (for example YouTube video ads) are not blocked.
+- Facebook ad hiding relies on page text and attributes, and Facebook changes its markup often, so it can stop working until updated. Please [report it](https://github.com/mudasirahanger/ad-shield-block-pro/issues/new/choose) if you see sponsored posts slip through. Instagram, Reels and Marketplace ads are not covered yet.
 - The block lists are curated by hand and much smaller than uBlock Origin's.
 - Per-tab badge counts reset when the tab navigates.
 

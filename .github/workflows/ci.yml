@@ -17,7 +17,7 @@ jobs:
           for f in manifest.json rules/*.json; do node -e "JSON.parse(require('fs').readFileSync('$f'))" || exit 1; done
       - name: JavaScript syntax
         run: |
-          for f in background.js content.js popup/popup.js tools/build-rules.js; do node --check "$f" || exit 1; done
+          for f in background.js content.js facebook.js popup/popup.js tools/build-rules.js; do node --check "$f" || exit 1; done
       - name: Manifest references exist
         run: |
           node -e "

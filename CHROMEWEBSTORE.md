@@ -17,6 +17,7 @@ Ad Shield Block Pro blocks ads and third-party trackers on the websites you visi
 WHAT IT DOES
 Blocks requests to well-known ad networks and tracking services.
 Removes tracking parameters (such as utm_source and fbclid) from the links you open.
+Hides sponsored posts and the sponsored box on Facebook.
 Hides common cookie-consent banners (you can turn this off in the popup).
 Hides empty ad boxes that would otherwise be left on the page.
 Tells websites not to track you by sending the Do Not Track and Global Privacy Control signals.
@@ -73,6 +74,7 @@ The icon is a simple generated placeholder (white cross on blue). Replace it wit
 | declarativeNetRequest | permissions | Blocks requests to known ad and tracker domains, adds the Do Not Track and Global Privacy Control headers, removes the Referer header from third-party requests, and shows the per-tab blocked count on the toolbar icon. Blocking is done by the browser from fixed rules bundled with the extension; the extension never reads page traffic. |
 | storage | permissions | Saves the user's on/off setting and the list of sites they chose to pause, locally in the browser. |
 | `<all_urls>` | host_permissions | Ads and trackers appear on every website, so the blocking rules and header changes must apply to requests on any site. Also lets the popup show which site is currently open and lets the "Pause on this site" button work on any site. No page content is read or transmitted. |
+| Content script on `*.facebook.com` | content_scripts | Hides posts and sidebar boxes labelled "Sponsored" on Facebook, which serves its ads from its own domain. Reads only the on-page labels locally; nothing is sent anywhere. |
 | Content script on `http://*/*` and `https://*/*` | content_scripts | Hides empty ad containers and (optionally) cookie-consent banners on every page, except on sites the user has paused. |
 
 ## Privacy & Data Use
@@ -144,6 +146,7 @@ TODO
 
 | Version | Date | Changes | Status |
 |---------|------|---------|--------|
+| 1.2 | 2026-10-29 | Hides sponsored posts and sidebar ads on Facebook. | Draft |
 | 1.1 | 2026-10-28 | Added tracking-parameter stripping, cookie-banner hiding (toggle in popup), open-source project files and CI. | Draft |
 | 1.0 | 2026-10-28 | Initial release: ad and tracker blocking, Do Not Track / Global Privacy Control signals, Referer stripping for third-party requests, ad-slot hiding, global switch and per-site pause. | Draft |
 

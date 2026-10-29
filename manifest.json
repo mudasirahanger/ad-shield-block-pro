@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ad Shield Block Pro",
-  "version": "1.1",
+  "version": "1.2",
   "author": "Mudasir Ahanger",
   "description": "Blocks ads and trackers, strips tracking links, hides cookie banners, and sends Do Not Track / Global Privacy Control. No data leaves your browser.",
   "minimum_chrome_version": "111",
@@ -37,6 +37,11 @@
       "js": ["content.js"],
       "run_at": "document_start",
       "all_frames": true
+    },
+    {
+      "matches": ["https://*.facebook.com/*", "http://*.facebook.com/*"],
+      "js": ["facebook.js"],
+      "run_at": "document_idle"
     }
   ]
 }
