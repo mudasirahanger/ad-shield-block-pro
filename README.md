@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/mudasirahanger/ad-shield-block-pro/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue"></a>
   <img alt="Manifest" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.2-brightgreen">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.2.1-brightgreen">
   <img alt="Privacy" src="https://img.shields.io/badge/data%20collected-none-success">
   <img alt="Open source" src="https://img.shields.io/badge/open%20source-%E2%9D%A4-red">
   <a href="CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-orange"></a>

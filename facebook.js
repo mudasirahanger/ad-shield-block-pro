@@ -1,7 +1,9 @@
 // Facebook serves its ads from its own domain, so network rules can't touch them.
-// This script hides "Sponsored" posts in the feed and the "Sponsored" box in the right column.
-// Facebook changes its markup often and scrambles class names, so detection relies on
-// visible text / stable attributes rather than classes. Skipped when paused or turned off.
+// This script finds the visible "Sponsored" label anywhere on the page and hides the ad it belongs to:
+//   - a feed post (the outermost [role="article"] around the label), or
+//   - a right-column ad box (the biggest narrow ancestor that holds ad links but not the contacts list).
+// Facebook scrambles its markup, so detection uses rendered text (innerText ignores the decoy letters
+// it hides with CSS) instead of class names. Skipped when protection is off or the site is paused.
 (async () => {
   try {
     const { enabled = true, allowlist = [] } = await chrome.storage.local.get(['enabled', 'allowlist']);
@@ -13,55 +15,61 @@
     style.textContent = `[${HIDDEN}] { display: none !important; }`;
     (document.head || document.documentElement).appendChild(style);
 
-    const isSponsoredLabel = (el) => {
-      const label = (el.getAttribute('aria-label') || '').trim();
-      if (label === 'Sponsored') return true;
-      // innerText ignores letters Facebook hides with CSS to defeat text matching.
-      return el.children.length < 8 && el.innerText?.trim() === 'Sponsored';
+    // Cheap pre-filter: scrambled labels still contain the letters of "Sponsored" in order.
+    const MAYBE = /s.*p.*o.*n.*s.*o.*r.*e.*d/i;
+    const SIDEBAR_STOP = /Contacts|Birthdays|Group conversations/;
+
+    const isLabel = (el) => {
+      const t = el.innerText?.trim();
+      return t === 'Sponsored' || t === 'Sponsored ·' || t === 'Paid partnership';
     };
 
-    const hide = (el) => el.setAttribute(HIDDEN, '');
-
-    // Feed: each direct child of [role="feed"] is a post. Hide the ones labelled Sponsored.
-    function scanFeed() {
-      for (const feed of document.querySelectorAll('[role="feed"]')) {
-        for (const post of feed.children) {
-          if (post.hasAttribute(HIDDEN) || post.dataset.adshieldChecked === post.innerHTML.length + '') continue;
-          const hasLabel =
-            post.querySelector('a[href*="/ads/about"], [aria-label="Sponsored"]') ||
-            [...post.querySelectorAll('a[role="link"], span')].slice(0, 60).some(isSponsoredLabel);
-          post.dataset.adshieldChecked = post.innerHTML.length + '';
-          if (hasLabel) hide(post);
-        }
+    function adContainer(label) {
+      // Feed post: outermost article that contains the label.
+      let article = label.closest('[role="article"]');
+      if (article) {
+        while (article.parentElement?.closest('[role="article"]')) article = article.parentElement.closest('[role="article"]');
+        return article;
       }
+      // Right column: climb while the box stays narrow and doesn't swallow the contacts list.
+      let best = null;
+      for (let node = label; node && node !== document.body; node = node.parentElement) {
+        const width = node.getBoundingClientRect().width;
+        if (width > 480 || SIDEBAR_STOP.test(node.innerText || '')) break;
+        if (node.querySelector('a[href]')) best = node;
+      }
+      return best;
     }
 
-    // Right column: find the "Sponsored" heading and hide the smallest ancestor that also holds the ad links.
-    function scanSidebar() {
-      for (const side of document.querySelectorAll('[role="complementary"]')) {
-        for (const node of side.querySelectorAll('h3, h2, span')) {
-          if (node.hasAttribute(HIDDEN) || node.children.length > 3 || !isSponsoredLabel(node)) continue;
-          let box = node;
-          while (box.parentElement && box.parentElement !== side && !box.querySelector('a[href]')) box = box.parentElement;
-          // Never hide a container that also holds the contacts list.
-          if (box !== side && !box.querySelector('[aria-label="Contacts"], [aria-label="Contacts" i]')) hide(box);
-        }
+    function scan(root) {
+      const candidates = root.querySelectorAll('span, a, h2, h3, div[aria-label="Sponsored"]');
+      for (const el of candidates) {
+        if (el.children.length > 14) continue;
+        const quickText = el.textContent || '';
+        if (quickText.length > 90 || !MAYBE.test(quickText)) continue;
+        if (!(el.getAttribute('aria-label') === 'Sponsored' || isLabel(el))) continue;
+        const box = adContainer(el);
+        if (box && !box.hasAttribute(HIDDEN)) box.setAttribute(HIDDEN, '');
+      }
+      // Stable fallback: the "Why am I seeing this ad" link Facebook attaches to ads.
+      for (const a of root.querySelectorAll('a[href*="/ads/about"]')) {
+        const box = adContainer(a);
+        if (box && !box.hasAttribute(HIDDEN)) box.setAttribute(HIDDEN, '');
       }
     }
 
     let queued = false;
-    function scan() {
+    function schedule() {
       if (queued) return;
       queued = true;
       requestAnimationFrame(() => {
         queued = false;
-        scanFeed();
-        scanSidebar();
+        scan(document.body);
       });
     }
 
-    scan();
-    new MutationObserver(scan).observe(document.documentElement, { childList: true, subtree: true });
+    scan(document.body);
+    new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
   } catch (err) {
     console.error('Ad Shield Block Pro (Facebook) error:', err);
   }
