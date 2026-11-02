@@ -15,7 +15,7 @@ Blocks ads and trackers, sends Do Not Track and Global Privacy Control signals, 
 Ad Shield Block Pro blocks ads and third-party trackers on the websites you visit, so pages load cleaner and fewer companies can follow you around the web.
 
 WHAT IT DOES
-Blocks requests to well-known ad networks and tracking services.
+Blocks ads and trackers using the widely used EasyList and EasyPrivacy filter lists, so far more ad networks are covered.
 Removes tracking parameters (such as utm_source and fbclid) from the links you open.
 Hides sponsored posts and the sponsored box on Facebook.
 Hides common cookie-consent banners (you can turn this off in the popup).
@@ -71,7 +71,7 @@ The icon is a simple generated placeholder (white cross on blue). Replace it wit
 
 | Permission | Type | Justification |
 |------------|------|---------------|
-| declarativeNetRequest | permissions | Blocks requests to known ad and tracker domains, adds the Do Not Track and Global Privacy Control headers, removes the Referer header from third-party requests, and shows the per-tab blocked count on the toolbar icon. Blocking is done by the browser from fixed rules bundled with the extension; the extension never reads page traffic. |
+| declarativeNetRequest | permissions | Blocks requests to ad and tracker servers listed in the bundled EasyList and EasyPrivacy filter lists, adds the Do Not Track and Global Privacy Control headers, removes the Referer header from third-party requests, and shows the per-tab blocked count on the toolbar icon. Blocking is done by the browser from fixed rules bundled with the extension; the extension never reads page traffic. |
 | storage | permissions | Saves the user's on/off setting and the list of sites they chose to pause, locally in the browser. |
 | `<all_urls>` | host_permissions | Ads and trackers appear on every website, so the blocking rules and header changes must apply to requests on any site. Also lets the popup show which site is currently open and lets the "Pause on this site" button work on any site. No page content is read or transmitted. |
 | Content script on `*.facebook.com` | content_scripts | Hides posts and sidebar boxes labelled "Sponsored" on Facebook, which serves its ads from its own domain. Reads only the on-page labels locally; nothing is sent anywhere. |
@@ -146,6 +146,7 @@ TODO
 
 | Version | Date | Changes | Status |
 |---------|------|---------|--------|
+| 1.3 | 2026-11-02 | Blocks ads and trackers using the full EasyList and EasyPrivacy filter lists (about 100,000 rules). | Draft |
 | 1.2 | 2026-10-29 | Hides sponsored posts and sidebar ads on Facebook. | Draft |
 | 1.1 | 2026-10-28 | Added tracking-parameter stripping, cookie-banner hiding (toggle in popup), open-source project files and CI. | Draft |
 | 1.0 | 2026-10-28 | Initial release: ad and tracker blocking, Do Not Track / Global Privacy Control signals, Referer stripping for third-party requests, ad-slot hiding, global switch and per-site pause. | Draft |
@@ -153,6 +154,7 @@ TODO
 ## Review Notes
 
 ### Known Issues / Limitations
+- EasyList/EasyPrivacy-derived rules are CC BY-SA 3.0 / GPLv3+; keep the credit in NOTICE.md and mention it in the listing's description if the store asks for open-source attribution.
 - `<all_urls>` host access is broad; reviewers may ask for the justification above. It is inherent to an ad blocker.
 - First-party ads (for example YouTube video ads) are not blocked.
 - Automated browser test passed on 2026-10-28 (rulesets load, ad and tracker requests blocked, DNT and Sec-GPC sent, ad slot hidden, pause rule created, no errors). Popup UI and real-site behaviour still need a manual check.

@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/mudasirahanger/ad-shield-block-pro/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue"></a>
   <img alt="Manifest" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.2.1-brightgreen">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.3-brightgreen">
   <img alt="Privacy" src="https://img.shields.io/badge/data%20collected-none-success">
   <img alt="Open source" src="https://img.shields.io/badge/open%20source-%E2%9D%A4-red">
   <a href="CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-orange"></a>
@@ -30,8 +30,8 @@
 
 | | |
 |---|---|
-| 🛑 **Ad blocking** | Blocks requests to 126 ad networks (Google Ads, Taboola, Criteo, Outbrain and more). |
-| 🕵️ **Tracker blocking** | Blocks 138 analytics, session-replay and fingerprinting domains (Google Analytics, Hotjar, Facebook pixel, Clarity…). |
+| 🛑 **Ad blocking** | Uses the full [EasyList](https://easylist.to) (≈48,000 rules) plus a hand-made list of 126 ad networks. |
+| 🕵️ **Tracker blocking** | Uses the full EasyPrivacy list (≈56,000 rules) plus 138 hand-picked analytics and session-replay domains. |
 | 🔗 **Clean links** | Strips tracking parameters (`utm_*`, `fbclid`, `gclid`, `msclkid`, `mc_eid`…) from every page you open, so links can't tag you. |
 | 🍪 **Cookie-banner hiding** | Hides common cookie-consent pop-ups (OneTrust, Cookiebot, Didomi, Quantcast…). Toggle in the popup. |
 | 🛡️ **Privacy signals** | Sends *Do Not Track* and *Global Privacy Control* on every request. |
@@ -91,12 +91,14 @@ Blocking uses Chrome's `declarativeNetRequest` engine: rules are compiled by the
 | `content.js` | Cosmetic filtering (ad slots, cookie banners); skipped on paused sites |
 | `facebook.js` | Hides sponsored posts and sidebar ads on facebook.com |
 | `popup/` | Toolbar popup UI |
-| `rules/` | Generated rulesets: `ads`, `trackers`, `patterns`, `params`, `privacy` |
+| `rules/` | Generated rulesets: `easylist`, `easyprivacy`, `ads`, `trackers`, `patterns`, `params`, `privacy` |
+| `tools/convert-filters.js` | Converts Adblock-Plus-syntax filter lists to Chrome rules |
+| `tools/update-lists.js` | Downloads the latest EasyList/EasyPrivacy and regenerates their rulesets |
 | `tools/build-rules.js` | **Source of truth** for the block lists; regenerates `rules/*.json` |
 | `tools/make-icons.py` | Regenerates the PNG icons |
 | `store-assets/` | Screenshots, banner and promo images |
 
-To add a domain: edit `tools/build-rules.js`, run `node tools/build-rules.js`, reload the extension.
+To add a domain: edit `tools/build-rules.js`, run `node tools/build-rules.js`, reload the extension. To refresh EasyList/EasyPrivacy: `node tools/update-lists.js`.
 
 ## Contributing
 
@@ -106,7 +108,9 @@ Contributions of every size are welcome: new block-list entries, bug fixes, site
 
 Ideas open for contributors:
 
-- [ ] Import larger community filter lists (EasyList / EasyPrivacy) converted to Chrome rules
+- [x] ~~Import EasyList / EasyPrivacy as Chrome rules~~ (done in 1.3)
+- [ ] Cosmetic filtering from EasyList (element-hiding rules per site)
+- [ ] More lists: uBlock filters, regional lists, annoyances
 - [ ] Per-tab blocked-request breakdown in the popup
 - [ ] Custom user rules and domain block/allow list
 - [ ] Localisation (Hindi, Urdu, Arabic, Spanish…)
@@ -117,7 +121,7 @@ Ideas open for contributors:
 
 - Rules are domain/URL based. Ads served from a site's own domain (for example YouTube video ads) are not blocked.
 - Facebook ad hiding relies on page text and attributes, and Facebook changes its markup often, so it can stop working until updated. Please [report it](https://github.com/mudasirahanger/ad-shield-block-pro/issues/new/choose) if you see sponsored posts slip through. Instagram, Reels and Marketplace ads are not covered yet.
-- The block lists are curated by hand and much smaller than uBlock Origin's.
+- Chrome's rule format can't express everything in EasyList: cosmetic ("element hiding") filters, regex filters and special options such as `$popup`/`$csp` are skipped, so some ads that uBlock Origin removes will still show.
 - Per-tab badge counts reset when the tab navigates.
 
 ## Privacy
@@ -137,3 +141,5 @@ Created and maintained by **[Mudasir Ahanger](https://github.com/mudasirahanger)
 ## License
 
 [MIT](LICENSE) © 2026 Mudasir Ahanger. Free to use, modify and share.
+
+**Exception:** `rules/easylist.json` and `rules/easyprivacy.json` are converted from [EasyList and EasyPrivacy](https://easylist.to) and are licensed CC BY-SA 3.0 / GPLv3+. See [NOTICE.md](NOTICE.md).

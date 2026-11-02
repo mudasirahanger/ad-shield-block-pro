@@ -1,4 +1,5 @@
-const RULESETS = ['ads', 'trackers', 'patterns', 'params', 'privacy'];
+// Small hand-made lists first, then the big converted filter lists.
+const RULESETS = ['privacy', 'params', 'patterns', 'ads', 'trackers', 'easylist', 'easyprivacy'];
 const ALLOW_RULE_BASE = 1000;
 
 // Show how many requests were blocked on each tab as the toolbar badge.
@@ -11,15 +12,19 @@ async function init() {
   }
 }
 
+// Toggles each ruleset on its own: Chrome limits how many static rules can be on at once,
+// so if the big lists don't fit on a low-resource machine the smaller ones still work.
 async function applyEnabled(enabled) {
-  try {
-    await chrome.declarativeNetRequest.updateEnabledRulesets(
-      enabled ? { enableRulesetIds: RULESETS } : { disableRulesetIds: RULESETS }
-    );
-    await chrome.action.setBadgeText({ text: '' });
-  } catch (err) {
-    console.error('Failed to toggle rulesets:', err);
+  for (const id of RULESETS) {
+    try {
+      await chrome.declarativeNetRequest.updateEnabledRulesets(
+        enabled ? { enableRulesetIds: [id] } : { disableRulesetIds: [id] }
+      );
+    } catch (err) {
+      console.warn(`Could not ${enabled ? 'enable' : 'disable'} ruleset "${id}":`, err.message);
+    }
   }
+  await chrome.action.setBadgeText({ text: '' });
 }
 
 // Per-site allowlist: one dynamic "allowAllRequests" rule per paused hostname.
@@ -45,7 +50,13 @@ chrome.runtime.onInstalled.addListener(async () => {
   await syncAllowlist(allowlist);
 });
 
-chrome.runtime.onStartup.addListener(init);
+// Make sure every ruleset is on after browser start / extension update (manifest defaults can be dropped
+// by Chrome when the global static-rule pool is short).
+chrome.runtime.onStartup.addListener(async () => {
+  await init();
+  const { enabled = true } = await chrome.storage.local.get('enabled');
+  if (enabled) await applyEnabled(true);
+});
 
 chrome.storage.onChanged.addListener(async (changes, area) => {
   if (area !== 'local') return;
